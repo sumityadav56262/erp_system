@@ -17,6 +17,7 @@ import { StudentListPage } from './pages/StudentListPage';
 import { FacultyListPage } from './pages/FacultyListPage';
 import { CourseListPage } from './pages/CourseListPage';
 import { FinancePage } from './pages/FinancePage';
+import axios from 'axios';
 
 
 // --- Main App Component ---
@@ -29,18 +30,36 @@ const App = () => {
     const [modalConfig, setModalConfig] = useState({ isOpen: false, isLoading: false, content: '', title: '' });
 
     useEffect(() => {
+        const storedUserRole = localStorage.getItem('userRole');
+        if (storedUserRole) {
+            setUserRole(storedUserRole);
+            setCurrentPage('/dashboard');
+        }
+    }, []);
+
+    useEffect(() => {
         const root = window.document.documentElement;
         root.classList.remove('light', 'dark');
         root.classList.add(theme);
     }, [theme]);
 
-    const handleLogin = (role) => {
-        setUserRole(role);
-        setCurrentPage('/dashboard');
+    const handleLogin = (email,password) => {
+        axios.post('http://localhost:8000/api/login', { email, password })
+            .then(response => {
+                const role = response.data.role; // Assuming the API returns the user role
+                setUserRole(role);
+                localStorage.setItem('userRole', role);
+                setCurrentPage('/dashboard');
+            })
+            .catch(error => {
+                console.error("Login error:", error);
+                alert("Login failed. Please check your credentials.");
+            });
     };
     
     const handleLogout = () => {
         setUserRole(null);
+        localStorage.removeItem('userRole');
         setCurrentPage('/login');
     };
     
