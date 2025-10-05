@@ -17,8 +17,8 @@ import { StudentListPage } from './pages/StudentListPage';
 import { FacultyListPage } from './pages/FacultyListPage';
 import { CourseListPage } from './pages/CourseListPage';
 import { FinancePage } from './pages/FinancePage';
-import axios from 'axios';
-
+// import axiosInstance from 'axios';
+// import { login } from './components/api/auth';
 
 // --- Main App Component ---
 const App = () => {
@@ -43,23 +43,41 @@ const App = () => {
         root.classList.add(theme);
     }, [theme]);
 
-    const handleLogin = (email,password) => {
-        axios.post('http://localhost:8000/api/login', { email, password })
-            .then(response => {
-                const role = response.data.role; // Assuming the API returns the user role
-                setUserRole(role);
-                localStorage.setItem('userRole', role);
-                setCurrentPage('/dashboard');
-            })
-            .catch(error => {
-                console.error("Login error:", error);
-                alert("Login failed. Please check your credentials.");
-            });
+    const handleLogin = (role) => {
+        switch(role) {
+            case 'admin':
+                setUserRole('admin');
+                localStorage.setItem('userRole', 'admin');
+                break;
+            case 'student':
+                setUserRole('student');
+                localStorage.setItem('userRole', 'student');
+                break;
+            case 'teacher':
+                setUserRole('teacher');
+                localStorage.setItem('userRole', 'teacher');
+                break;
+            case 'accountant':
+                setUserRole('accountant');
+                localStorage.setItem('userRole', 'accountant');
+                break;
+            default:
+                alert("Invalid role selected for login.");
+                return;
+        }
+        setCurrentPage('/dashboard');
+
+        // login({email,password}).then(user=>{
+        //     setUserRole(user.role);
+        //     setCurrentPage('/dashboard');
+        // }).catch(err=>{
+        //     console.error("Login failed:", err);
+        //     alert("Login failed. Please check your credentials.");
+        // });
     };
     
     const handleLogout = () => {
         setUserRole(null);
-        localStorage.removeItem('userRole');
         setCurrentPage('/login');
     };
     

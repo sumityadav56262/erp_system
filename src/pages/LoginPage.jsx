@@ -29,7 +29,14 @@ export const LoginPage = () => {
                         </div>
                     </CardContent>
                     <CardFooter className="flex flex-col">
-                        <Button className="w-full" onClick={() => handleLogin(email, password)}>Login as Admin</Button>
+                        <div className="grid grid-cols-2 gap-2 w-full">
+                           <Button onClick={() => handleLogin('admin')}>Login as Admin</Button>
+                           <Button onClick={() => handleLogin('student')} variant="secondary">Login as Student</Button>
+                           <Button onClick={() => handleLogin('teacher')} variant="secondary">Login as Teacher</Button>
+                           <Button onClick={() => handleLogin('accountant')} variant="outline">Accountant</Button>
+                           <Button onClick={() => handleLogin('librarian')} variant="outline">Librarian</Button>
+                           <Button onClick={() => handleLogin('exam_officer')} variant="outline">Exam Officer</Button>
+                        </div>
                         <a href="#" className="text-sm text-primary hover:underline mt-4">Forgot Password?</a>
                     </CardFooter>
                 </Card>
